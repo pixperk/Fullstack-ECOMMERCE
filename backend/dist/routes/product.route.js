@@ -1,9 +1,10 @@
 import express from "express";
 import { adminOnly } from "../middlewares/auth.js";
 import { singleUpload } from "../middlewares/multer.js";
-import { deleteProduct, getAdminProducts, getAllCategories, getLatestProducts, getSingleProduct, newProduct, updateProduct, } from "../controllers/product.controller.js";
+import { deleteProduct, getAdminProducts, getAllCategories, getAllProducts, getLatestProducts, getSingleProduct, newProduct, updateProduct, } from "../controllers/product.controller.js";
 const app = express.Router();
 app.post("/new", adminOnly, singleUpload, newProduct);
+app.get("/all", getAllProducts);
 app.get("/latest", getLatestProducts);
 app.get("/categories", getAllCategories);
 app.get("/admin/products", adminOnly, getAdminProducts);
