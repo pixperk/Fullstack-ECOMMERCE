@@ -8,13 +8,16 @@ export interface NewUserRequestBody {
   _id: string;
   dob: Date;
 }
-
-export interface Params{
-  id:string,
+export interface NewProductRequestBody {
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
 }
 
+
 export type ControllerType = (
-  req: Request<Params, {}, NewUserRequestBody>,
+  req: Request,
   res: Response,
   next: NextFunction
-) => Promise<void|Response<any, Record<string, any>>>;
+) => Promise<void | Response<any, Record<string, any>>>;
