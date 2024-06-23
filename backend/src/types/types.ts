@@ -15,7 +15,6 @@ export interface NewProductRequestBody {
   stock: number;
 }
 
-
 export type ControllerType = (
   req: Request,
   res: Response,
@@ -38,3 +37,9 @@ export interface BaseQuery {
   price?: { $lte: number };
   category?: string;
 }
+
+export type invalidateCacheProps = {
+  product?: boolean;
+  order?: boolean;
+  admin?: boolean;
+};
