@@ -7,6 +7,7 @@ import morgan from "morgan";
 import userRoute from "./routes/user.route.js";
 import productRoute from "./routes/product.route.js";
 import orderRoute from "./routes/order.route.js";
+import paymentRoute from "./routes/payment.route.js";
 config({
     path: "./.env"
 });
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
 app.use("/api/v1/order", orderRoute);
+app.use("/api/v1/payment", paymentRoute);
 app.use("/uploads", express.static("uploads"));
 app.use(errorMiddleware);
 app.listen(port, () => console.log(`Server is running on http://localhost:${port}`));

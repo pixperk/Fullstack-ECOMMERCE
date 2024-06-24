@@ -10,7 +10,7 @@ export const adminOnly  = TryCatch(
         
         const user = await User.findById(id)
         if(!user) return next(new ErrorHandler("User does not exist",401))
-        if(user.role!=="admin") return next(new ErrorHandler("Unauthorised (Not an admin)",401))
+        if(user.role!=="admin") return next(new ErrorHandler("Unauthorised (Not an admin)",403))
 
         next()
     
