@@ -5,7 +5,7 @@ export const errorMiddleware = (err, req, res, next) => {
         err.message = "Invalid ID format";
     return res.status(err.statusCode).json({
         success: false,
-        message: err.message
+        message: err.message,
     });
 };
 export const TryCatch = (func) => (req, res, next) => {

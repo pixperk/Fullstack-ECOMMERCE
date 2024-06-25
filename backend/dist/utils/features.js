@@ -41,3 +41,31 @@ export const reduceStock = async (orderItems) => {
         await product.save();
     }
 };
+export const calculatePercentage = (thisMonth, lastMonth) => {
+    if (lastMonth === 0)
+        return thisMonth * 100;
+    const percent = (thisMonth / lastMonth) * 100;
+    return Math.round(percent);
+};
+export const getInventory = async ({ categories, productCount, }) => {
+    const categoryCountPromise = categories.map((category) => Product.countDocuments({ category }));
+    const categoriesCount = await Promise.all(categoryCountPromise);
+    const categoryPercentage = [];
+    categories.forEach((categ, i) => {
+        categoryPercentage.push({
+            [categ]: Math.round((categoriesCount[i] / productCount) * 100),
+        });
+    });
+    return categoryPercentage;
+};
+export const getChartData = ({ length, docArr, today, property, }) => {
+    const data = new Array(length).fill(0);
+    docArr.forEach((i) => {
+        const creationDate = i.createdAt;
+        const monthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12;
+        if (monthDiff < length) {
+            data[length - 1 - monthDiff] += property ? i[property] : 1;
+        }
+    });
+    return data;
+};

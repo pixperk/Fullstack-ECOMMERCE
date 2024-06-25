@@ -3,6 +3,7 @@ import { Order } from "../models/order.model.js";
 import { invalidateCache, reduceStock } from "../utils/features.js";
 import ErrorHandler from "../utils/utility-class.js";
 import { myCache } from "../app.js";
+import { Product } from "../models/product.model.js";
 export const myOrders = TryCatch(async (req, res, next) => {
     const { id: user } = req.query;
     let orders = [];
@@ -50,8 +51,15 @@ export const getSingleOrder = TryCatch(async (req, res, next) => {
 });
 export const newOrder = TryCatch(async (req, res, next) => {
     const { shippingInfo, orderItems, user, subtotal, tax, shippingCharges, discount, total, } = req.body;
-    if (!shippingInfo || !orderItems || !user || !subtotal || !tax || !total)
+    if (!shippingInfo || !orderItems || !user || !subtotal || !tax || !total) {
         return next(new ErrorHandler("Please Enter All Fields", 400));
+    }
+    for (const o of orderItems) {
+        const product = await Product.findById(o.productId);
+        if (!product) {
+            return next(new ErrorHandler('Invalid product', 400));
+        }
+    }
     const order = await Order.create({
         shippingInfo,
         orderItems,
@@ -68,11 +76,11 @@ export const newOrder = TryCatch(async (req, res, next) => {
         order: true,
         admin: true,
         userId: user,
-        productId: order.orderItems.map(i => String(i.productId))
+        productId: order.orderItems.map(i => String(i.productId)),
     });
     return res.status(201).json({
         success: true,
-        message: `Order  Placed Successfully`,
+        message: `Order Placed Successfully`,
     });
 });
 export const processOrder = TryCatch(async (req, res, next) => {
