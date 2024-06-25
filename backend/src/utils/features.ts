@@ -11,7 +11,7 @@ export const connectDB = (url: string, dbName: string) => {
     .catch((e) => console.log(`Mongo DB Cnonection Error : ${e}`));
 };
 
-export const invalidateCache = async ({
+export const invalidateCache =  ({
   product,
   order,
   admin,
@@ -42,6 +42,12 @@ export const invalidateCache = async ({
     myCache.del(orderKeys);
   }
   if (admin) {
+    myCache.del([
+      "admin-stats",
+      "admin-pie-charts",
+      "admin-bar-charts",
+      "admin-line-charts",
+    ]);
   }
 };
 

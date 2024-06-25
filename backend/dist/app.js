@@ -4,6 +4,7 @@ import { errorMiddleware } from "./middlewares/error.js";
 import NodeCache from "node-cache";
 import { config } from 'dotenv';
 import morgan from "morgan";
+import Stripe from 'stripe';
 import userRoute from "./routes/user.route.js";
 import productRoute from "./routes/product.route.js";
 import orderRoute from "./routes/order.route.js";
@@ -14,10 +15,12 @@ config({
 });
 const port = process.env.PORT || 4000;
 const mongoURL = process.env.MONGO_URL || "";
+const stripeKey = process.env.STRIPE_KEY || "";
 const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 connectDB(mongoURL, "ECommerce");
+export const stripe = new Stripe(stripeKey);
 export const myCache = new NodeCache();
 app.get("/", (req, res) => {
     res.send("Api Working with /api/v1");

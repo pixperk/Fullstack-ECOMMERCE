@@ -7,7 +7,7 @@ export const connectDB = (url, dbName) => {
         .then((c) => console.log(`DB Connected to ${c.connection.host}`))
         .catch((e) => console.log(`Mongo DB Cnonection Error : ${e}`));
 };
-export const invalidateCache = async ({ product, order, admin, userId, orderId, productId, }) => {
+export const invalidateCache = ({ product, order, admin, userId, orderId, productId, }) => {
     if (product) {
         const productKeys = [
             "latest-products",
@@ -29,6 +29,12 @@ export const invalidateCache = async ({ product, order, admin, userId, orderId, 
         myCache.del(orderKeys);
     }
     if (admin) {
+        myCache.del([
+            "admin-stats",
+            "admin-pie-charts",
+            "admin-bar-charts",
+            "admin-line-charts",
+        ]);
     }
 };
 export const reduceStock = async (orderItems) => {
