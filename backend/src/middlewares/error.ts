@@ -11,7 +11,7 @@ export const errorMiddleware = (
   err.message ||= "Internal Server Error";
   err.statusCode ||= 500;
 
-  if (err.name === "CastError") err.message = "Invalid ID format";
+  if (err.name === "CastError") err.message = "Check Typo in route or ID format";
 
   return res.status(err.statusCode).json({
     success: false,

@@ -1,17 +1,35 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
+import { UserReducerInitialState } from "../../../types/reducer-types";
+import { useSelector } from "react-redux";
+import { useProductDetailsQuery } from "../../../redux/api/productAPI";
+import { useParams } from "react-router";
+import { server } from "../../../redux/store";
 
 const img =
   "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
 
 const Productmanagement = () => {
-  const [price, setPrice] = useState<number>(2000);
-  const [stock, setStock] = useState<number>(10);
-  const [name, setName] = useState<string>("Puma Shoes");
-  const [photo, setPhoto] = useState<string>(img);
-  const [category, setCategory] = useState<string>("footwear");
+  const { user } = useSelector(
+    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+  );
 
+  const params = useParams();
+
+  const { data } = useProductDetailsQuery(params.id!);
+
+  const [product, setProduct] = useState({
+    _id : "",
+    photo : "",
+    category : "",
+    name : "",
+    stock : 0,
+    price : 0,
+  });
+
+  const {price,photo,name,stock,category} = product
+  
   const [priceUpdate, setPriceUpdate] = useState<number>(price);
   const [stockUpdate, setStockUpdate] = useState<number>(stock);
   const [nameUpdate, setNameUpdate] = useState<string>(name);
@@ -43,13 +61,25 @@ const Productmanagement = () => {
     setPhoto(photoUpdate);
   };
 
+    useEffect(()=>{
+      if(data){
+        setProduct(data.product)
+        setNameUpdate(data.product.name)
+        setPriceUpdate(data.product.price)
+        setStockUpdate(data.product.stock)
+        setCategoryUpdate(data.product.category)
+
+      }
+    },[data])
+
+
   return (
     <div className="admin-container">
       <AdminSidebar />
       <main className="product-management">
         <section>
-          <strong>ID - fsdfsfsggfgdf</strong>
-          <img src={photo} alt="Product" />
+          <strong>ID - ${product._id}</strong>
+          <img src={`${server}/${photo}`} alt="Product" />
           <p>{name}</p>
           {stock > 0 ? (
             <span className="green">{stock} Available</span>
