@@ -4,5 +4,5 @@ import { adminOnly } from "../middlewares/auth.js";
 const app = express.Router();
 app.post("/new", newUser);
 app.get("/all", adminOnly, getAllUsers);
-app.route("/:id").get(adminOnly, getUser).delete(adminOnly, deleteUser);
+app.route("/:id").get(getUser).delete(adminOnly, deleteUser);
 export default app;
