@@ -1,22 +1,26 @@
 import { useState } from "react";
-import {
-  FaSearch,
-  FaShoppingBag,
-  FaSignOutAlt,
-  FaUser,
-} from "react-icons/fa";
+import { FaSearch, FaShoppingBag, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { User } from "../types/types";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
+import toast from "react-hot-toast";
 
-interface PropsType{
-  user : User | null;
+interface PropsType {
+  user: User | null;
 }
 
-const Header = ({user} : PropsType) => {
+const Header = ({ user }: PropsType) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const logOutHandler = () => {
-    setIsOpen(false)
+  const logOutHandler = async () => {
+    try {
+      await signOut(auth);
+      toast.success("Logged Out");
+      setIsOpen(false);
+    } catch (error) {
+      toast.error('Cannot Log Out')
+    }
   };
   return (
     <nav className="header">
@@ -42,7 +46,7 @@ const Header = ({user} : PropsType) => {
                 </Link>
               )}
               <Link onClick={() => setIsOpen(false)} to="/orders">
-               Orders
+                Orders
               </Link>
               <button onClick={logOutHandler}>
                 <FaSignOutAlt />
@@ -51,9 +55,7 @@ const Header = ({user} : PropsType) => {
           </dialog>
         </>
       ) : (
-        <Link to="/login">
-          Login
-        </Link>
+        <Link to="/login">Login</Link>
       )}
     </nav>
   );
