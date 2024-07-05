@@ -1,15 +1,14 @@
 import { ReactElement, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
+import { Skeleton } from "../../components/Loader";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { UserReducerInitialState } from "../../types/reducer-types";
 import { useAllOrdersQuery } from "../../redux/api/orderAPI";
+import { RootState } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
-import toast from "react-hot-toast";
-import { server } from "../../redux/store";
-import { Skeleton } from "../../components/Loader";
 
 interface DataType {
   user: string;
@@ -20,33 +19,6 @@ interface DataType {
   action: ReactElement;
 }
 
-const arr: Array<DataType> = [
-  {
-    user: "Charas",
-    amount: 4500,
-    discount: 400,
-    status: <span className="red">Processing</span>,
-    quantity: 3,
-    action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
-  },
-
-  {
-    user: "Xavirors",
-    amount: 6999,
-    discount: 400,
-    status: <span className="green">Shipped</span>,
-    quantity: 6,
-    action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
-  },
-  {
-    user: "Xavirors",
-    amount: 6999,
-    discount: 400,
-    status: <span className="purple">Delivered</span>,
-    quantity: 6,
-    action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
-  },
-];
 
 const columns: Column<DataType>[] = [
   {
@@ -77,11 +49,11 @@ const columns: Column<DataType>[] = [
 
 const Transaction = () => {
   const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+    (state: RootState) => state.userReducer
   );
 
   const { isLoading, data, isError, error } = useAllOrdersQuery(user?._id!);
-  const [rows, setRows] = useState<DataType[]>(arr);
+  const [rows, setRows] = useState<DataType[]>([]);
 
   if (isError) {
     const err = error as CustomError;
